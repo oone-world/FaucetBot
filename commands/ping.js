@@ -1,12 +1,12 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { ALCHEMY_RINKEBY_URL, INFURA_RINKEBY_URL, FROM_ADDRESS, infura } = require('../config.json');
+const { RPC_URL, FROM_ADDRESS } = require('../config.json');
 const ethers = require('ethers');
-const provider = new ethers.providers.JsonRpcProvider(infura ? INFURA_RINKEBY_URL : ALCHEMY_RINKEBY_URL);
+const provider = new ethers.providers.JsonRpcProvider(RPC_URL);
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('ping')
-		.setDescription('Replies with Pong!, configured provider, faucet balance and donation address.'),
+		.setDescription('Replies with Pong!, faucet balance and donation address.'),
 	async execute(interaction) {
 		let balance;
 		try {
@@ -18,6 +18,6 @@ module.exports = {
 		}
 
 		const balanceShort = balance.toString().slice(0, balance.toString().indexOf('.') + 3);
-		return interaction.reply(`Pong! Provider: ${infura ? 'Infura' : 'Alchemy'}. Current balance: ${balanceShort} ETH. Please use /faucet to request funds.\nDonate: ${FROM_ADDRESS}`);
+		return interaction.reply(`Pong! Current balance: ${balanceShort} tOONE. Please use /faucet to request funds.\nDonate: ${FROM_ADDRESS}`);
 	},
 };

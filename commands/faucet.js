@@ -1,8 +1,7 @@
-const { amount, infura } = require('../config.json');
+const { amount } = require('../config.json');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed } = require('discord.js');
-const sendViaAlchemy = require('../utils/sendViaAlchemy.js');
-const sendViaInfura = require('../utils/sendViaInfura.js');
+const sendFunds = require('../utils/sendFunds.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -15,21 +14,14 @@ module.exports = {
 	async execute(interaction) {
 		const address = interaction.options.get('address').value.trim();
 
-		const reply = infura ?
-			'Request sent to Infura. Please check the link to see if it\'s mined.'
-			:
-			// TODO: Change this to "Please wait for it to be mined" once Alchemy Notify is set up.
-			'Request sent to Alchemy. Please check the link to see if it\'s mined.';
-
-		await	interaction.reply(reply);
-
-		const request = infura ? await sendViaInfura(address, amount) : await sendViaAlchemy(address, amount);
+		await interaction.reply('Request sent to OONE Chain Testnet. Please check the link to see if it\'s mined.');
+		const request = await sendFunds(address, amount);
 
 		if (request.status === 'success') {
 			const embed = new MessageEmbed()
 				.setColor('#3BA55C')
-				.setDescription(`[View on Etherscan](https://rinkeby.etherscan.io/tx/${request.message})`);
-			return interaction.followUp({ content: `Transaction for ${amount} ETH created.`, embeds: [embed] });
+				.setDescription(`[View on Oonescan](https://dev.oonescan.com/tx/${request.message})`);
+			return interaction.followUp({ content: `Transaction for ${amount} tOONE created.`, embeds: [embed] });
 		}
 		else {
 			return interaction.followUp(`Failed to send funds. Error: ${request.message}`);

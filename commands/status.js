@@ -1,25 +1,13 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { ETHERSCAN_API_KEY, watchlist } = require('../config.json');
-const ethers = require('ethers');
+const { watchlist } = require('../config.json');
+const fetch = require('node-fetch');
 const { MessageEmbed } = require('discord.js');
 
-const provider = new ethers.providers.EtherscanProvider('rinkeby', ETHERSCAN_API_KEY)
+async function getLastTx(address) {
+	const res = await fetch('https://dev.oonescan.com/api?module=account&action=txlist&address=' + address, { method: 'Get' });
+	const json = await res.json();
 
-async function getLastTx(address, hours = 12) {
-	const block = await provider.getBlockNumber()
-	const blockTime = 15;
-
-	const blockMinusHour = block - (1 * 60 * 60 / blockTime);
-	const blockMinusArg = block - (hours * 60 * 60 / blockTime);
-	let history = await provider.getHistory(address, blockMinusHour, block);
-	(history.length === 0 ? history = await provider.getHistory(address, blockMinusArg, block) : null);
-
-	if (history.length === 0) {
-		return null;
-	}
-	else {
-		return history[history.length - 1].timestamp;
-	}
+	return json['result'][0]['timeStamp'];
 }
 
 module.exports = {
@@ -46,7 +34,7 @@ module.exports = {
 			.setTitle('Last faucet transactions')
 			.setColor('#0099ff')
 			.setTimestamp()
-			.setFooter('Powered by Etherscan')
+			.setFooter('Powered by Oonescan')
 			.setDescription(transactions.map(({ label, url, timestamp }) => `[${label}](${url}): ${timestamp}`).join('\n'))
 
 		return interaction.followUp({ embeds: [embed] })
