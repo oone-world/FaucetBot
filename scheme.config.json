@@ -2,8 +2,7 @@
   "clientId": "",
   "guildId": "",
   "token": "",
-	"ALCHEMY_RINKEBY_URL": "",
-	"INFURA_RINKEBY_URL": "",
+	"RPC_URL": "",
 	"PRIVATE_KEY": "",
 	"FROM_ADDRESS": "",
 	"cooldown": 3600000,
@@ -11,7 +10,6 @@
 	"maxFeePerGas": 95000000000,
 	"activityType": "WATCHING",
 	"activityName": "Buildspace.so",
-	"infura": false,
 	"approvedRoles": ["869338295207870485", "869605103701737482", "869605623208214573", "902645751631454258"],
 	"watchlist": [
 		{

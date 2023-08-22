@@ -17,7 +17,7 @@ Features:
 # Setup
 * Register an application and get a token [from here](https://discord.com/developers/applications)
 * Rename the `scheme.config.json` file to `config.json`
-* Add the bot token, Alchemy URL, wallet keys, and the guild/client IDs to the `config.json` file 
+* Add the bot token, wallet keys, and the guild/client IDs to the `config.json` file 
 Note: The client ID is the application ID of the bot. You can get this from the application page or by right-clicking the bot and selecting "Copy ID". 
 The guild ID is the ID of the server you want the bot to be in. You can get this by right-clicking the server and selecting "Copy ID".
 
