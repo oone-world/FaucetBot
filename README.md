@@ -36,7 +36,6 @@ pm2 start index.js
 ```
 I highly recommend a process manager such as [PM2](https://pm2.keymetrics.io/) or [forever](https://github.com/foreversd/forever) to make sure the bot stays up.
 * Use `/faucet <address>` to request funds.
-* Use `/ping` to get balance and donation address.
 
 # Config
 You can change the following in the `config.json` file: 
