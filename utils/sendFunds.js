@@ -8,10 +8,11 @@ module.exports = async (toAddress, amount) => {
 		return ({ status: 'error', message: 'Missing environment variables, please ask human to set them up.' });
 	}
 	// eslint-disable-next-line no-async-promise-executor
-	return new Promise (async (resolve, reject) => {
+	return new Promise (async (resolve) => {
 		const balance = web3.utils.fromWei(await web3.eth.getBalance(FROM_ADDRESS), 'ether')
 		if (balance < parseFloat(amount)) {
-			reject({ status: 'error', message: `I'm out of funds! Please donate: ${FROM_ADDRESS}` });
+			console.log('Out of funds');
+			return resolve({ status: 'error', message: `I'm out of funds! Please donate: ${FROM_ADDRESS}` });
 		}
 		const nonce = await web3.eth.getTransactionCount(FROM_ADDRESS, 'latest');
 		const amountInWei = web3.utils.toWei(amount);
@@ -27,11 +28,11 @@ module.exports = async (toAddress, amount) => {
 		web3.eth.sendSignedTransaction(signedTx.rawTransaction)
 			.on('transactionHash', (hash) => {
 				console.log('Transaction: https://dev.oonescan.com/tx/' + hash);
-				resolve({ status: 'success', message: hash });
+				return resolve({ status: 'success', message: hash });
 			})
 			.on('error', (error) => {
-				console.log('error: ', error)
-				reject({ status: 'error', message: error });
+				console.log(error);
+				return resolve({ status: 'error', message: error });
 			});
 	});
 }

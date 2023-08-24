@@ -66,22 +66,27 @@ client.on('interactionCreate', async interaction => {
 				}
 			}
 
-			const request = await sendFunds(address, amount);
-			if (request.status === 'success') {
-				const embed = new MessageEmbed()
-					.setColor('#3BA55C')
-					.setDescription(`[View on Oonescan](https://dev.oonescan.com/tx/${request.message})`);
-				interaction.reply({ content: `Transaction for ${amount} tOONE created.`, embeds: [embed], ephemeral: true });
-			}
-			else {
-				interaction.reply({ content: `Failed to send funds. Error: ${request.message}`, ephemeral: true });
-			}
+			try {
+				const request = await sendFunds(address, amount);
+				if (request.status === 'success') {
+					const embed = new MessageEmbed()
+						.setColor('#3BA55C')
+						.setDescription(`[View on Oonescan](https://dev.oonescan.com/tx/${request.message})`);
+					interaction.reply({ content: `Transaction for ${amount} tOONE created.`, embeds: [embed], ephemeral: true });
+				}
+				else {
+					return interaction.reply({ content: `Failed to send funds. Error: ${request.message}`, ephemeral: true });
+				}
 
-			// If not an approved role, set the last requested time
-			if (!approvedRoles.some(role => interaction.member.roles.cache.has(role))) {
-				await keyv.set(interaction.user.id, Date.now());
+				// If not an approved role, set the last requested time
+				if (!approvedRoles.some(role => interaction.member.roles.cache.has(role))) {
+					await keyv.set(interaction.user.id, Date.now());
+				}
+				await keyv.set('lastTx', Date.now());
 			}
-			await keyv.set('lastTx', Date.now());
+			catch (error) {
+				interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });
+			}
 		}
 	}
 });
